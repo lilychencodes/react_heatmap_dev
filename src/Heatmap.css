@@ -3,14 +3,30 @@
   align-items: center;
 }
 
+.tile {
+  position: relative;
+}
+
 .tile:hover {
-  cursor: pointer;
   border: 2px solid #5D6A7E !important;
+}
+
+.hover-info {
+  position: absolute;
+  margin-top: 45px;
+  margin-left: -50px;
+  z-index: 1;
+  width: 150px;
+  background: rgba(0,0,0,0.7);
+  color: white;
+  padding: 7px 15px;
+  border-radius: 5px;
 }
 
 .legend-panel {
   display: flex;
   align-items: center;
+  justify-content: flex-end;
   margin-bottom: 20px;
 }
 

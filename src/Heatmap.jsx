@@ -26,8 +26,6 @@ export default class Heatmap extends Component {
      noDataColor: PropTypes.string,
      showToolTip: PropTypes.bool,
      columnLabelPosition: PropTypes.string,
-     htmlLabel: PropTypes.bool,
-     legendPosition: PropTypes.string,
      fixedWidth: PropTypes.bool
   }
 
@@ -43,8 +41,6 @@ export default class Heatmap extends Component {
     noDataColor: GRAY,
     showToolTip: true,
     columnLabelPosition: 'bottom',
-    htmlLabel: false,
-    legendPosition: 'right',
     fixedWidth: true
   }
 
@@ -54,7 +50,8 @@ export default class Heatmap extends Component {
     this.state = {
       columnLabelWidth: 0,
       rowLabelWidth: 0,
-      cellWidth: 0
+      cellWidth: 0,
+      hoveredIndices: []
     }
 
     this.updateDimensions = this.updateDimensions.bind(this)
@@ -148,8 +145,8 @@ export default class Heatmap extends Component {
         <div key={index} style={{minWidth, height: columnLabelWidth}} className='column-label-container'>
           <div
             style={{height: cellWidth, lineHeight: `${cellWidth}px`, top: `-${Math.floor(cellWidth / 2)}px`, width: columnLabelWidth}}
-            className='column-label-rotated-text'
-            dangerouslySetInnerHTML={{__html: label}}>
+            className='column-label-rotated-text'>
+            {label}
           </div>
         </div>
       )
@@ -170,7 +167,7 @@ export default class Heatmap extends Component {
 
   renderRows() {
     const { data, columnLabels, cellHeight, rowLabels, fixedWidth } = this.props
-    const { rowLabelWidth, cellWidth } = this.state
+    const { rowLabelWidth, cellWidth, hoveredIndices } = this.state
 
     return data.map((row, rowIndex) => {
       const label = rowLabels[rowIndex]
@@ -186,10 +183,15 @@ export default class Heatmap extends Component {
           style.minWidth = cellWidth
         }
 
-        let tooltipContent = `${label}, ${columnLabels[colIndex]}: ${value}`
-
         return (
-          <div key={`${rowIndex}-${colIndex}`} className='tile' style={style}></div>
+          <div
+            key={`${rowIndex}-${colIndex}`}
+            onMouseEnter={() => this.setState({hoveredIndices: [rowIndex, colIndex]})}
+            onMouseLeave={() => this.setState({hoveredIndices: []})}
+            className='tile'
+            style={style}>
+            {hoveredIndices[0] === rowIndex && hoveredIndices[1] === colIndex && <div className='hover-info'>{label}, {columnLabels[colIndex]}: <strong>{value}</strong></div>}
+          </div>
         )
       })
 
@@ -225,7 +227,7 @@ export default class Heatmap extends Component {
 
   render() {
     return (
-      <div ref='heatmap' className='heatmap' style={{overflow: 'auto'}}>
+      <div ref='heatmap' className='heatmap'>
         {this.props.showLegend && this.renderLegend()}
         <div className='heatmap-data'>
           {this.renderRows()}
