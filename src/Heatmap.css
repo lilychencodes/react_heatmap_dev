@@ -1,0 +1,31 @@
+.flex-row {
+  display: flex;
+  align-items: center;
+}
+
+.tile:hover {
+  cursor: pointer;
+  border: 2px solid #5D6A7E !important;
+}
+
+.legend-panel {
+  display: flex;
+  align-items: center;
+  margin-bottom: 20px;
+}
+
+.legend-label {
+  margin: 0 5px;
+}
+
+.column-label-container {
+  position: relative;
+  display: inline-block;
+}
+
+.column-label-rotated-text {
+  overflow: hidden;
+  position: absolute;
+  transform: rotate(70deg);
+  transform-origin: bottom left;
+}
